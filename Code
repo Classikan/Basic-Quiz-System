@@ -1,0 +1,99 @@
+#           QUIZ SYSTEM
+
+import json #importing predefined modules
+import random
+import getpass
+
+print("Name: Jeet Kanodia")  #printing signauture
+print("Reg.NO: 21BIT0636")
+
+
+def Info():
+    global name1    #making Global Variables
+    global RegNO
+    global email
+    name1=input("Enter your name: ")    #asking the users info
+    RegNO=input("Enter your registration number: ")
+    email=input("Enter your email id: ")
+
+def play():
+    global score
+    print("\n==========QUIZ START==========")   #This function starts the asking questions and counts the score
+    score = 0
+    with open("questions.json", 'r+') as f:
+        j = json.load(f)
+        n=len(j)
+        for i in range(n):
+            no_of_questions = len(j)
+            ch = random.randint(0, n-1)
+            print(f'\nQ{i+1} {j[ch]["question"]}\n')
+            for option in j[ch]["options"]:
+                print(option)
+            answer = input("\nEnter your answer: ") 
+            if j[ch]["answer"][0] == answer[0].upper():
+                print("\nYou are correct")
+                print('-----------------------------------------')
+                score+=1
+            else:
+                print("\nYou are incorrect")
+                print('-----------------------------------------')
+            del j[ch]
+
+def ADDQuestions():
+
+    print('\n==========ADD QUESTIONS==========\n')         #This function can be used to add new questions
+    print('-----------------------------------------')
+    ques = input("Enter the question that you want to add:\n")
+    opt = []
+    print("Enter the 4 options with character initials (A, B, C, D)")
+    for x in range(4):
+        opt.append(input())
+    ans = input("Enter the answer:\n")
+    with open("questions.json", 'r+') as f:
+        questions = json.load(f)
+        dic = {"question": ques, "options": opt, "answer": ans}
+        questions.append(dic)
+        f.seek(0)
+        json.dump(questions, f)
+        f.truncate()
+        print("Question successfully added.")
+        print('-----------------------------------------')
+        
+def Output():
+    print('\n\n---------------Report Card--------------------------')
+    print("NAME : ",name1)
+    print("Reg.NO : ",RegNO)            #this function prints the report card of user
+    print("E-Mail :" ,email)
+    print("FINAL SCORE:" ,score)
+
+def about():
+	print('''\n==========ABOUT ME==========
+This Quiz system was made by Jeet Kanodia - 21BIT0636
+You can add questions with choices and then allow the users to answer them''')
+
+    
+if 1==1:   #making an infinite loop
+    choice = 1
+    while choice != 4:
+        print('\n=========WELCOME TO SIMPLE QUIZ SYSTEM==========')   #This asks the user for choice
+        print('-----------------------------------------')
+        print('''1. PLAY QUIZ
+2. ADD QUIZ QUESTIONS'
+3. SEE INSTRUCTIONS ON HOW TO PLAY THE GAME'
+4. EXIT'
+5. ABOUT US''')
+        choice = int(input('ENTER YOUR CHOICE: '))
+        if choice == 1:
+            Info()
+            play()
+            Output()
+        elif choice == 2:
+            ADDQuestions()
+        elif choice == 3:
+            rules()
+        elif choice == 4:
+            break
+        elif choice == 5:
+            about()
+        else:
+            print('WRONG INPUT. ENTER THE CHOICE AGAIN')
